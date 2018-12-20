@@ -1,10 +1,9 @@
-package br.edu.unidavi.trabalho.entity;
-
-import java.util.Date;
+package br.edu.unidavi.trabalho.dao;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,14 +19,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class Cliente {
+public class Endereco {
 
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	Integer id;
-
-	String nome;
-	String email;
-	String cpf;
-	Date dataNascimento;
-	Endereco endereco;
+	@Id @GeneratedValue(strategy=GenerationType.AUTO)
+	Long id;
+	
+	String rua;
+	String cidade;
+	String estado;
+	String cep;
 }

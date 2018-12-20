@@ -1,8 +1,11 @@
-package br.edu.unidavi.trabalho.entity;
+package br.edu.unidavi.trabalho.dao;
+
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,12 +21,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class Item {
+public class Pedido {
+
+	@Id @GeneratedValue(strategy=GenerationType.AUTO)
+	Long id;
 	
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	Integer id;
-	
-	Integer quantidade;
+	Long numero;
 	Double total;
-	Pedido pedido;
+	Date dataCriacao;
 }
