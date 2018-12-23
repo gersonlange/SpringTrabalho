@@ -29,29 +29,29 @@ import br.edu.unidavi.trabalho.dao.ProdutoResourceAssembler;
 public class ProdutoRestController {
 
 	@Autowired
-	ProdutoRepository repository;
+	ProdutoRepository produtoRepository;
 	
 	ProdutoResourceAssembler assembler = new ProdutoResourceAssembler();
 	
 	@PostConstruct
 	public void init() {
-//		repository.save(new Produto(1l, "John", 11111, "john@john.com", new Date()));
-//		repository.save(new Produto(2l, "Steve", 22222, "steve.stevent@st.com", new Date()));
-//		repository.save(new Produto(3l, "Mary", 33333, "mary@robinson.com", new Date()));
-//		repository.save(new Produto(4l, "Kate", 44444,"kate@kate.com", new Date()));
-//		repository.save(new Produto(5l, "Diana", 55555,"diana@doll.com", new Date()));		
+		produtoRepository.save(new Produto(1l, "Tomate", "Tomate fresco", "Da lavoura", 2.25d));
+		produtoRepository.save(new Produto(2l, "Feijao", "Feijao escolhido", "Joazinho", 6.75d));
+//		produtoRepository.save(new Produto(3l, "Mary", 33333, "mary@robinson.com", new Date()));
+//		produtoRepository.save(new Produto(4l, "Kate", 44444,"kate@kate.com", new Date()));
+//		produtoRepository.save(new Produto(5l, "Diana", 55555,"diana@doll.com", new Date()));		
 	}
 	
 	@Secured("ROLE_USER")
 	@GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 	public ResponseEntity<List<ProdutoResource>> getAll() {
-		return new ResponseEntity<>(assembler.toResources(repository.findAll()), HttpStatus.OK);
+		return new ResponseEntity<>(assembler.toResources(produtoRepository.findAll()), HttpStatus.OK);
 	}
 	
 	@Secured("ROLE_USER")
 	@GetMapping("/{id}")
 	public ResponseEntity<ProdutoResource> get(@PathVariable Long id) {
-		Produto produto = repository.findOne(id);
+		Produto produto = produtoRepository.findOne(id);
 		if (produto != null) {			
 			return new ResponseEntity<>(assembler.toResource(produto), HttpStatus.OK);
 		} else {
@@ -62,7 +62,7 @@ public class ProdutoRestController {
 	@Secured("ROLE_MANAGER")
 	@PostMapping
 	public ResponseEntity<ProdutoResource> create(@RequestBody Produto produto) {
-		produto = repository.save(produto);
+		produto = produtoRepository.save(produto);
 		if (produto != null) {
 			return new ResponseEntity<>(assembler.toResource(produto), HttpStatus.OK);					
 		} else {
@@ -75,7 +75,7 @@ public class ProdutoRestController {
 	public ResponseEntity<ProdutoResource> update(@PathVariable Long id, @RequestBody Produto produto) {
 		if (produto != null) {
 			produto.setId(id);
-			produto = repository.save(produto);
+			produto = produtoRepository.save(produto);
 			return new ResponseEntity<>(assembler.toResource(produto), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -85,9 +85,9 @@ public class ProdutoRestController {
 	@Secured("ROLE_MANAGER")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<ProdutoResource> delete(@PathVariable Long id) {
-		Produto produto = repository.findOne(id);
+		Produto produto = produtoRepository.findOne(id);
 		if (produto != null) {
-			repository.delete(produto);
+			produtoRepository.delete(produto);
 			return new ResponseEntity<>(assembler.toResource(produto), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -97,6 +97,12 @@ public class ProdutoRestController {
 	@PreAuthorize("hasRole('ROLE_USER')")
 	@GetMapping("/nome/{nome}")
 	public ResponseEntity<List<ProdutoResource>> findByNome(@PathVariable String nome) {
-		return new ResponseEntity<>(assembler.toResources(repository.findByNome(nome)), HttpStatus.OK);
+		return new ResponseEntity<>(assembler.toResources(produtoRepository.findByNomeContainingIgnoreCase(nome)), HttpStatus.OK);
+	}
+
+	@PreAuthorize("hasRole('ROLE_USER')")
+	@GetMapping("/marca/{marca}")
+	public ResponseEntity<List<ProdutoResource>> findByMarca(@PathVariable String marca) {
+		return new ResponseEntity<>(assembler.toResources(produtoRepository.findByMarcaContainingIgnoreCase(marca)), HttpStatus.OK);
 	}
 }

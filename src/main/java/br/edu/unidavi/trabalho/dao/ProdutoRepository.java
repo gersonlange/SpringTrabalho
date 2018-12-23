@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 	
-	List<Produto> findByNome(String nome);
+	List<Produto> findByNomeContainingIgnoreCase(String nome);
+	
+	List<Produto> findByMarcaContainingIgnoreCase(String marca);
 }
